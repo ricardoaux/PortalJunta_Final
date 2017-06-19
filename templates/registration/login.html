@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title> Entrar </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="{% static "css/login.css" %}">
+
+</head>
+
+<body>
+<div class="textclass"> <h1> {{ message }}</h1></div>
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="loginmodal-container">
+            <h1> Autenticação </h1><br>
+            {% if form.non_field_errors %}
+            <h2> {{ form.non_field_errors }}</h2>
+            {% endif %}
+
+            <form method="post" action=".">
+                <p><label for="id_username">Username:</label>
+                    {{ form.username }}</p>
+                <p><label for="id_password">Password:</label>
+                    {{ form.password }}</p>
+                <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+                <input type="hidden" name="next" value="/" />
+                {% csrf_token %}
+            </form>
+            <div class="login-help">
+                <a href="/register">Registar</a> - <a href="#">Esqueceu-se da Password?</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

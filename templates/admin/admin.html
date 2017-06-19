@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title> Administração </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom-styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/component.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome-ie7.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+    <script src="{% static 'js/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
+    <script src="{% static 'js/jquery-1.9.1.js' %}"></script>
+
+</head>
+<body>
+{% if user.username == 'admin' %}
+
+<div class="container">
+    <div class="site-header">
+        <div class="site-header">
+            <div class="loginbtn">
+                <p> Bem Vindo {{ user.username }} </p>
+                <a href="/logout" class="btnout">logout</a>
+                <h1> Administração </h1>
+                {% if messages %}
+                <ul class="messages">
+                    {% for msg in messages %}
+                    <li>
+                        <div class="alert alert-{{msg.level_tag}}" role="alert">
+                            {{msg.message}}
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="menu">
+            <nav class="navbar navbar-default" role="navigation">
+                <ul class="nav navbar-nav">
+                    <li><a href="/manager/utilizador">Utilizadores</a></li>
+                    <li><a href="/manager/noticia">Notícias</a></li>
+                    <li><a href="/manager/evento">Eventos</a></li>
+                    <li><a href="/manager/questionario">Questionários</a></li>
+                    <li><a href="/manager/ficheiro">Documentos</a></li>
+                    <li><a href="/manager/pergunta">Votações</a></li>
+                    <li><a href="/manager/servico">Serviços</a></li>
+                    <li><a href="/manager/requerimento">Requerimentos</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Pagamentos <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/manager/eupago">EuPago</a></li>
+                            <li><a href="/manager/paypal">Paypal</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="tabs2">
+        <table class="table">
+            <h1 class="titulo">Aprovar Utilizadores</h1>
+            {% if aprovar.values.first != None %}
+            <tr>
+                <th> Id </th>
+                <th> Username </th>
+            </tr>
+
+            {% for b in aprovar %}
+            <tr>
+                <td>{{ b.user.id }}</td>
+                <td>{{ b.user.username }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <div class = "textclass">
+                <h2> Sem Utilizadores para Aprovar </h2>
+            </div>
+            {% endif %}
+
+        </table>
+    </div>
+</div>
+
+<div class="container">
+    <div class="tabs2">
+        <table class="table">
+            <h1 class="titulo">Requerimentos</h1>
+            {% if reqs|length != 0 %}
+            <tr>
+                <th> Requerente </th>
+                <th> Serviço </th>
+                <th> Estado </th>
+            </tr>
+
+            {% for f in reqs %}
+            <tr>
+                <td><a href='/manager/utilizador/{{ f.user_id }}'> {{ f.username }} </a></td>
+                <td>{{ f.servico }}</td>
+                <td>{{ f.estado }}</td>
+                <!-- <td><p><a href='/manager/requerimento/{{ f.id }}'> Ver </a></p></td> -->
+                <td><p><a href='/manager/requerimento/{{ f.id }}/change'> Gerir </a></p></td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <div class = "textclass">
+                <h2> Sem Requerimentos </h2>
+            </div>
+            {% endif %}
+
+        </table>
+    </div>
+</div>
+
+<div class="container">
+    <div class="tabs">
+        <table class="table">
+            <h1 class="titulo">Ocorrências</h1>
+            {% if ocorr.values.first != None %}
+            <tr>
+                <th><p> Categoria </p></th>
+                <th><p> Local </p></th>
+            </tr>
+
+            {% for d in ocorr %}
+            <tr>
+                <td><p> {{ d.categoria }} </p></td>
+                <td><p> {{ d.local }} </p></td>
+                <td><p><a href='/manager/ocorrencia/{{ d.id }}'> Ver </a></p></td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <div class = "textclass">
+                <h2> Sem Ocorrências Relatadas </h2>
+            </div>
+            {% endif %}
+
+        </table>
+    </div>
+</div>
+
+<div class="container">
+    <div class="tabs2">
+        <table class="table">
+            <h1 class="titulo">Mensagens</h1>
+            {% if mens.values.first != None %}
+            <tr>
+                <th><p> Remetente </p></th>
+                <th><p> Assunto </p></th>
+            </tr>
+
+            {% for c in mens %}
+
+            <tr>
+                <td><p> {{ c.remetente }} </p></td>
+                <td><p> {{ c.assunto }} </p></td>
+                <td><p><a href='/manager/mensagem/{{ c.id }}'> Ver </a></p></td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <div class = "textclass">
+                <h2> Sem Mensagens </h2>
+            </div>
+            {% endif %}
+
+        </table>
+    </div>
+</div>
+
+<script src="{% static 'js/bootstrap.js' %}"></script>
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+# Create your models here.
+
+
+class Cidadao(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    num_bi = models.PositiveIntegerField(blank=True, null=True)
+    morada = models.CharField(max_length=100, blank=True, null=True)
+    data_nascimento =  models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
+    codigo_postal = models.CharField(max_length=8, blank=True, null=True)
+    localidade = models.CharField(max_length=30,blank=True, null=True)
+    telefone = models.PositiveIntegerField(blank=True, null=True)
+    nro_eleitor = models.PositiveIntegerField(blank=True, null=True)
+    pai = models.CharField(max_length=100, blank=True, null=True)
+    mae = models.CharField(max_length=100, blank=True, null=True)
+    aprovado = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username
+
+
+class Conteudo_Site(models.Model):
+    titulo = models.CharField(max_length=100)
+    descricao = models.CharField(max_length=3000)
+    data_insercao = models.DateTimeField(auto_now_add=True, blank=True)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.titulo
+
+
+class Noticia(Conteudo_Site):
+    imagem = models.ImageField(upload_to='news_images/', blank=True, null=True)
+
+
+class Evento(Conteudo_Site):
+    data_evento = models.DateTimeField()
+    imagem = models.ImageField(upload_to='events_images/', blank=True, null=True)
+
+
+class Ficheiro(Conteudo_Site):
+    OPCOES = (
+        ("ACAO", "Plano de Acao"),
+        ("CONTAS", "Relatorio de Contas"),
+        ("ACTAS", "Actas de Reuniao"),
+        ("OUTRO", "Outros"),
+    )
+
+    tipo = models.CharField(max_length=20, choices=OPCOES,
+                  default="OUTRO")
+    ficheiro = models.FileField(upload_to='documents/')
+
+
+class Questionario(Conteudo_Site):
+    quest = models.CharField(max_length=400)
+    ativo = models.BooleanField(default=True)
+
+
+class Pergunta(Conteudo_Site):
+    ativo = models.BooleanField(default=True)
+
+
+class Opcao(models.Model):
+    pergunta = models.ForeignKey(Pergunta)
+    texto = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.texto
+
+
+class Votacao(models.Model):
+    utilizador = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    pergunta = models.ForeignKey(Pergunta, on_delete=models.CASCADE, null=False)
+    respondido = models.ForeignKey(Opcao, on_delete=models.CASCADE, null=False)
+
+
+class Conteudo_Utilizador(models.Model):
+    data_insercao = models.DateTimeField(auto_now_add=True, blank=True)
+
+    class Meta:
+        abstract = True
+
+
+class Mensagem (Conteudo_Utilizador):
+    remetente = models.CharField(max_length=100)
+    assunto = models.CharField(max_length=100)
+    email = models.EmailField(max_length=60)
+    mensagem = models.CharField(max_length=1000)
+    telefone = models.IntegerField()
+
+
+class Ocorrencia (Conteudo_Utilizador):
+    OPCOES = (
+        ("A1", "Acessos para cidadãos de mobilidade reduzida"),
+        ("A2", "Animais abandonados"),
+        ("A3", "Arbustos ou árvores na via pública"),
+        ("A4", "Conservação da ilumincação pública"),
+        ("A5", "Conservação de ruas e pavimentos"),
+        ("A6", "Conservação do parque escolar"),
+        ("A7", "Estacionamento de veículos"),
+        ("A8", "Limpeza de valetas, bermas e caminhos"),
+        ("A9", "Limpeza e conservação de espaços públicos"),
+        ("A10", "Manutenção de ciclovias"),
+        ("A11", "Manutenção e limpeza de contentores e ecopontos"),
+        ("A12", "Manutenção, rega e limpeza de jardins"),
+        ("A13", "Nomes ou numeração de ruas"),
+        ("A14", "Poluição sonora"),
+        ("A15", "Publicidade, outdoors e cartazes"),
+        ("A16", "Recolha de lixo"),
+        ("A17", "Rupturas de águas ou desvio de tampas"),
+        ("A18", "Sinalização de trânsito"),
+        ("A19", "Outras ocorrências"),
+    )
+
+    utilizador = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    categoria = models.CharField(max_length=20, choices=OPCOES)
+    local = models.CharField(max_length=200)
+    informacao = models.CharField(max_length=1000)
+    imagem = models.ImageField(upload_to='ocorr_images/', blank=True, null=True)
+
+
+class Servico (models.Model):
+    nome = models.CharField(max_length=50, unique=True)
+    preco = models.FloatField()
+    descricao = models.CharField(max_length=1000, blank=True, null=True)
+
+    def __str__(self):
+
+        return self.nome
+
+class Requerimento(models.Model):
+    ESTADOS = (
+        ("ANALISE", "Em Análise"),
+        ("PAGAMENTO", "Aguarda Pagamento"),
+        ("PAGO", "Pagamento Efetuado"),
+        ("DIFERIDO", "Diferido"),
+        ("RECUSADO", "Recusado"),
+    )
+
+    ENV = (
+        ("C", "Correio"),
+        ("L", "Levantamento na Junta"),
+    )
+
+    PAG = (
+        ("J", "Pagar na Junta"),
+        ("O", "Pagar Online"),
+    )
+
+    utilizador = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    servico = models.ForeignKey(Servico, on_delete=models.CASCADE, null=False)
+    documento = models.FileField(upload_to='user_documents/', blank=True, null=True)
+    estado = models.CharField(max_length=20, choices=ESTADOS)
+    data_req = models.DateTimeField(auto_now_add=True, blank=True)
+    data_ult_atual = models.DateTimeField(auto_now_add=True, blank=True)
+    descricao = models.CharField(max_length=2000)
+    pagamento = models.CharField(max_length=20, choices=PAG,  blank=True, null=True, default="O")
+    envio = models.CharField(max_length=20, choices=ENV,  blank=True, null=True, default="C")
+    descricao = models.CharField(max_length=2000,  blank=True, null=True)
+    mensagem = models.CharField(max_length=1000, blank=True, null=True)
+

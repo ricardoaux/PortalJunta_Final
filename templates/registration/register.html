@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title> Registo </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="{% static "css/login.css" %}">
+
+</head>
+<body>
+
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="loginmodal-container">
+            <h1> Registo </h1><br>
+            {% if form.errors %}
+            <h2> O formulário apresenta erros! </h2>
+            {% endif %}
+
+            {% if registered %}
+            <strong> Obrigado por se registar. Enviaremos a confirmação para o email indicado. </strong>
+            <br />
+            <a href="/"> Voltar à página inicial </a><br />
+            {% else %}
+            <form method="post" action=".">
+                {{ form.as_p }}
+                <input type="submit" name="register" class="login loginmodal-submit" value="Register">
+                {% csrf_token %}
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

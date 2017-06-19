@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
+<head>
+    <head>
+        {% load static %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title> Eventos </title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap-responsive.css' %}">
+        <link rel="stylesheet" href="{% static 'css/custom-styles.css' %}">
+        <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
+        <link rel="stylesheet" href="{% static 'css/component.css' %}">
+        <link rel="stylesheet" href="{% static 'css/font-awesome-ie7.css' %}">
+        <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+        <script src="{% static 'js/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
+        <script src="{% static 'js/jquery-1.9.1.js' %}"></script>
+
+        <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5928a1e69f0427001183fdf4&product=inline-share-buttons"></script>
+
+
+    </head>
+<body>
+
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+<![endif]-->
+<script type="text/javascript">
+
+
+                function imgError(image) {
+                    image.src = "{% static "" %}"+"img/executivo_junta/noimage.jpg";
+                    return true;
+                }
+
+                $( document ).ready(function() {
+                    var image = new Image();
+
+                    var num = {{ num }};
+
+                    var ev = {{ events|safe }};
+                    var ev2 = JSON.parse(JSON.stringify(ev));
+
+                    if (ev2.length == 0){
+                        txt_html = "<h1> Sem eventos para mostrar! </h1>";
+                        $('#text').html(txt_html);
+                        return;
+                    }
+
+                    var txt_html = "<table class='table'>";
+
+                    var index;
+                    var tmp;
+
+                    for (index = 0; index < ev2.length; index++){
+                        tmp = ev2[index];
+
+                        if (tmp.imagem != '') {
+                            image.src = {{MEDIA_URL}}+tmp.imagem;
+                        }
+                        else {
+                            imgError(image);
+                        }
+
+                        if (num != 0) {
+                            txt_html += "<tr class='noBorder'> <th class='metade'> <h1>"  + ev2[index].titulo + "</h1> </tr>"
+                            + "<tr class='noBorder'> <td colspan='3'> <h2> Data do Evento: " + ev2[index].data_evento + " </h2> </td> </tr>"
+                            + "<tr class='noBorder'> <td colspan='3'> <img src=" + image.src + " class='bw3'>" + "</td></tr>"
+                            + "<tr class='noBorder'> <td colspan='3'> <p>" + ev2[index].descricao + " </p></td></tr>"
+                            + "<tr class='noBorder'> <td colspan='3'>" + ev2[index].data_insercao + "</td></tr>"
+                            + "<tr class='noBorder'> <td colspan='3'></td></tr>"
+                            + "<tr class='noBorder'> <td colspan='3'> <div class='sharethis-inline-share-buttons'></div> </td></tr>";
+                        }
+                        else {
+                            txt_html += "<tr class = 'noBorder'> <th class='metade'> <h1> <a href='/eventos/" + ev2[index].id + "'>" + ev2[index].titulo + "</a> </h1> </th>"
+                            + "<th> <img src=" + image.src +  " class='bw2r'>" + "</th> </tr>"
+                            + "<tr class='noBorder'> <td colspan='3'> <h2> Data do Evento: " + ev2[index].data_evento + "</h2></td></tr>";
+                        }
+
+                        if (ev2.length-1 != index){
+                            txt_html += "<tr class='blanckspace'> <td colspan='3'></td></tr>";
+                        }
+
+                    }
+
+
+                    txt_html += "</table>";
+                    $('#text').html(txt_html);
+                });
+
+
+            </script>
+
+<div class="container">
+    <div class="site-header">
+        <div class="loginbtn">
+            {% if user.is_authenticated %}
+            <p> Bem Vindo {{ user.username }} </p>
+            <a href="/logout" class="btnout">logout</a>
+            {% else %}
+            <a href="/register/" class="btnreg">register</a>
+            <a href="/login/" class="btnin">login</a>
+            {% endif %}
+
+            <h1> Eventos </h1>
+        </div>
+        <div class="menu">
+            <nav class="navbar navbar-default" role="navigation">
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Freguesia <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/heraldica">Heráldica</a></li>
+                            <li><a href="/historia">História</a></li>
+                            <li><a href="#">Património</a></li>
+                            <li><a href="#">Mapa</a></li>
+                            <li><a href="#">Instituições</a></li>
+                            <li><a href="#">Equipamentos</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Orgãos Autárquicos <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><h2> Junta </h2></li>
+                            <li><a href="/junta/competencias">Competências</a></li>
+                            <li><a href="/junta/executivo">Executivo</a></li>
+                            <hr><li><h2> Assembleia </h2></li>
+                            <li><a href="/assembleia/competencias">Competências</a></li>
+                            <li><a href="/assembleia/composicao">Composição</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/noticias">Noticias</a></li>
+                    <li><a href="/eventos">Atividades</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Gestão e Orçamento <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/planosdeacao">Planos de Acção</a></li>
+                            <li><a href="/contas">Relatórios de Contas</a></li>
+                            <li><a href="/actas">Actas de Reunião</a></li>
+                            <li><a href="/outros">Outros</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Serviços <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/servicos"> Listagem e Taxas </a></li>
+                            <li><a href="/requerimento"> Requerimento </a></li>
+                            <li><a href="/requerimento/consultar"> Consultar Estado </a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Sua Participação <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/questionario">Questionários</a></li>
+                            <li><a href="/votacao">Votações</a></li>
+                            <li><a href="/ocorrencia">Relato de Ocorrências</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/contactos">Contactos</a></li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="featured-content">
+        <p id="text" class="textclass"> </p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="menutwo">
+        <div class="featuredtwo">
+            <nav class="navbar navbar-default" role="navigation">
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Livro de Visitas</a></li>
+                    <li><a href="#">FAQ's</a></li>
+                    <li><a href="#">Mapa do Site</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="copy-rights">
+        Copyright(c) Portal da Junta @ 2017. <strong> Designed by: </strong> Ricardo Auxiliar
+    </div>
+</div>
+
+<script src="{% static 'js/bootstrap.js' %}"></script>
+
+</body>
+</html>

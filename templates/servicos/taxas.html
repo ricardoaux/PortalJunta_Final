@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title> Taxas dos Serviços </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom-styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/component.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome-ie7.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+    <script src="{% static 'js/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
+    <script src="{% static 'js/jquery-1.9.1.js' %}"></script>
+
+</head>
+<body>
+
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+<![endif]-->
+
+<!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+<div class="container">
+    <div class="site-header">
+        <div class="loginbtn">
+            {% if user.is_authenticated %}
+            {% if user.username == 'admin' %}
+            <p> Bem Vindo <a href="/manager"> {{ user.username }} </a></p>
+            {% else %}
+            <p> Bem Vindo {{ user.username }} </p>
+            {% endif %}
+            <a href="/logout" class="btnout">logout</a>
+            {% else %}
+            <a href="/register/" class="btnreg">registar</a>
+            <a href="/login/" class="btnin">login</a>
+            {% endif %}
+            <!-- <a data-toggle="modal" data-target="#login-modal"> <img src="{% static "img/Signin.png" %}" alt="" class="bw"> </a> -->
+            <h1> Listagem de Serviços e Taxas </h1>
+
+            {% if messages %}
+            <ul class="messages">
+                {% for msg in messages %}
+                <li>
+                    <div class="alert alert-{{msg.level_tag}}" role="alert">
+                        {{msg.message}}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="menu">
+            <nav class="navbar navbar-default" role="navigation">
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Freguesia <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/heraldica">Heráldica</a></li>
+                            <li><a href="/historia">História</a></li>
+                            <li><a href="#">Património</a></li>
+                            <li><a href="#">Mapa</a></li>
+                            <li><a href="#">Instituições</a></li>
+                            <li><a href="#">Equipamentos</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Orgãos Autárquicos <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><h2> Junta </h2></li>
+                            <li><a href="/junta/competencias">Competências</a></li>
+                            <li><a href="/junta/executivo">Executivo</a></li>
+                            <hr><li><h2> Assembleia </h2></li>
+                            <li><a href="/assembleia/competencias">Competências</a></li>
+                            <li><a href="/assembleia/composicao">Composição</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/noticias">Noticias</a></li>
+                    <li><a href="/eventos">Atividades</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Gestão e Orçamento <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/planosdeacao">Planos de Acção</a></li>
+                            <li><a href="/contas">Relatórios de Contas</a></li>
+                            <li><a href="/actas">Actas de Reunião</a></li>
+                            <li><a href="/outros">Outros</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Serviços <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/servicos"> Listagem e Taxas </a></li>
+                            <li><a href="/requerimento"> Requerimento </a></li>
+                            <li><a href="/requerimento/consultar"> Consultar Estado </a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Sua Participação <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/questionario">Questionários</a></li>
+                            <li><a href="/votacao">Votações</a></li>
+                            <li><a href="/ocorrencia">Relato de Ocorrências</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/contactos">Contactos</a></li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="tabs2">
+        <div class = "textclass">
+            <p> Acresce 1€ ao valor do serviço caso seja enviado por correio</p>
+            <p> Acresce 0.35€ + 3.4% do preço do serviço  pelo pagamento online</p>
+            {% if taxas.values.first != None %}
+        </div>
+        <table class="table">
+            <tr>
+                <th> Serviço </th>
+                <th> Preço </th>
+            </tr>
+
+            {% for d in taxas %}
+
+            <tr>
+                <td class="metade"> {{ d.nome }} </td>
+                <td> {{ d.preco }} € </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <div class = "textclass">
+            <h2> Sem Serviços Disponíveis </h2>
+        </div>
+        {% endif %}
+    </div>
+    <div class="tabs">
+        <div class = "textclass">
+            <h2> Formulário do requerimento disponível para download </h2>
+        </div>
+        <a href='{% static "documents/Requerimento.pdf" %}'> Download </a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="menutwo">
+        <div class="featuredtwo">
+            <nav class="navbar navbar-default" role="navigation">
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Livro de Visitas</a></li>
+                    <li><a href="#">FAQ's</a></li>
+                    <li><a href="#">Mapa do Site</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="copy-rights">
+        Copyright(c) Portal da Junta @ 2017. <strong> Designed by: </strong> Ricardo Auxiliar
+    </div>
+</div>
+
+<script src="{% static 'js/bootstrap.js' %}"></script>
+
+</body>
+</html>
