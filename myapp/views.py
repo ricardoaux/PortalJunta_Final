@@ -1,3 +1,4 @@
+
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import logout, login
@@ -71,7 +72,7 @@ def mylogin(request):
             login(request, user)
             return HttpResponseRedirect('/', {'user': request.user})
         else:
-            return render(request, 'registration/login.html', {'form': form})
+            return render(request, 'registration/login.html', {'form': form}, status=400)
     else:
         form = LoginForm()
         return render(request, 'registration/login.html', {'form': form})
@@ -107,7 +108,7 @@ def register_page(request):
             return render(request, 'registration/register.html', {'registered': True})
         else:
             #form = RegistrationForm()
-            return render(request, 'registration/register.html', {'form': form})
+            return render(request, 'registration/register.html', {'form': form}, status=400)
     else:
         form = UserCreationForm()
         return render(request, 'registration/register.html', {'form': form})
@@ -493,42 +494,42 @@ def show_requerimentos(request):
     return reqs_list
 
 
-@login_required(login_url='auth_error')
-def add_pergunta(request):
-    if request.user.username == 'admin':
-        if request.method == 'POST':
-            form = PerguntaForm(request.POST)
-            if form.is_valid():
-                new = form.save()
-                return redirect('/admin2/pergunta/'+str(new.id)+'/add')
-        else:
-            form = PerguntaForm()
-        return render(request, 'admin/add_pergunta.html', {'form': form})
-    else:
-        messages.error(request, 'Não dispõe de permissões')
-        return HttpResponseRedirect('/')
+#@login_required(login_url='auth_error')
+#def add_pergunta(request):
+#    if request.user.username == 'admin':
+#        if request.method == 'POST':
+#            form = PerguntaForm(request.POST)
+#            if form.is_valid():
+#                new = form.save()
+#                return redirect('/admin2/pergunta/'+str(new.id)+'/add')
+#        else:
+#            form = PerguntaForm()
+#        return render(request, 'admin/add_pergunta.html', {'form': form})
+#    else:
+#        messages.error(request, 'Não dispõe de permissões')
+#        return HttpResponseRedirect('/')
 
 
-@login_required(login_url='auth_error')
-def add_opcao(request, pergunta_id):
-    if request.user.username == 'admin':
-        pergunta = Pergunta.objects.get(id=pergunta_id)
-        if request.method == 'POST':
-            form = OpcaoForm(request.POST)
-            if form.is_valid():
-                # uses false commit to save the poll as the current poll ID, sets the initial vote to 0, and saves all choices the user
-                # has put in the form
-                add_pergunta = form.save(commit=False)
-                add_pergunta.pergunta = pergunta
-                add_pergunta.save()
-                form.save()
-            return redirect('/admin2/pergunta/' + str(pergunta.id) + '/add')
-        else:
-            form = OpcaoForm()
-        return render(request, 'admin/add_opcao.html', {'form': form, 'poll_id': pergunta_id})
-    else:
-        messages.error(request, 'Não dispõe de permissões')
-        return HttpResponseRedirect('/')
+#@login_required(login_url='auth_error')
+#def add_opcao(request, pergunta_id):
+#    if request.user.username == 'admin':
+#        pergunta = Pergunta.objects.get(id=pergunta_id)
+#        if request.method == 'POST':
+#            form = OpcaoForm(request.POST)
+#            if form.is_valid():
+#                # uses false commit to save the poll as the current poll ID, sets the initial vote to 0, and saves all choices the user
+#                # has put in the form
+#                add_pergunta = form.save(commit=False)
+#                add_pergunta.pergunta = pergunta
+#                add_pergunta.save()
+#                form.save()
+#            return redirect('/admin2/pergunta/' + str(pergunta.id) + '/add')
+#        else:
+#            form = OpcaoForm()
+#        return render(request, 'admin/add_opcao.html', {'form': form, 'poll_id': pergunta_id})
+#    else:
+#        messages.error(request, 'Não dispõe de permissões')
+#        return HttpResponseRedirect('/')
 
 
 
