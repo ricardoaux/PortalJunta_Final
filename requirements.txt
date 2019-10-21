@@ -28,5 +28,5 @@ six==1.10.0
 #soap2py==1.16
 #suds-jurko==0.6
 urllib3==1.21.1
-Werkzeug==0.12.2
+Werkzeug==0.15.3
 zeep==2.1.1
